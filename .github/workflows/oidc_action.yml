@@ -32,7 +32,7 @@ on:
   push
 env:
   AWS_REGION : "us-east-1"
-  AWS_ROLE_TO_ASSUME: "arn:aws:iam::438270576332:oidc-provider/token.actions.githubusercontent.com"
+  AWS_ROLE_TO_ASSUME: "arn:aws:iam::438270576332:role/oidc_github_action_role"
 permissions:
       id-token: write   # This is required for requesting the JWT
       contents: read    # This is required for actions/checkout
