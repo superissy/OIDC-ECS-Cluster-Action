@@ -1,0 +1,55 @@
+# name: Deploy to ECS Cluster
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     name: Deploy to ECS
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Configure AWS credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-region: us-east-1
+#           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+#           role-session-name: ecs-deployment-session
+
+#       - name: Create ECS Cluster
+#         run: |
+#           aws ecs create-cluster --cluster-name my-test-cluster
+
+
+
+name: AWS OIDC Connect Demo
+on:
+  push
+env:
+  AWS_REGION : "us-east-1"
+  AWS_ROLE_TO_ASSUME: "arn:aws:iam::438270576332:oidc-provider/token.actions.githubusercontent.com"
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
+jobs:
+  DemoOIDC:
+    runs-on: demo
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          role-session-name: samplerolesession
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Create ECS Cluster
+        run: |
+          aws ecs create-cluster --cluster-name my-test-cluster
