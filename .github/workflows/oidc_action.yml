@@ -1,32 +1,3 @@
-# name: Deploy to ECS Cluster
-
-# on:
-#   push:
-#     branches:
-#       - main
-
-# jobs:
-#   deploy:
-#     name: Deploy to ECS
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v1
-#         with:
-#           aws-region: us-east-1
-#           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-#           role-session-name: ecs-deployment-session
-
-#       - name: Create ECS Cluster
-#         run: |
-#           aws ecs create-cluster --cluster-name my-test-cluster
-
-
-
 name: AWS OIDC Connect Demo
 on:
   push
@@ -47,7 +18,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
-          role-session-name: samplerolesession
+          role-session-name: ecs-deploy-action-session
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Create ECS Cluster
