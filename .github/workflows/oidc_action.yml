@@ -4,6 +4,8 @@ on:
 env:
   AWS_REGION : "us-east-1"
   AWS_ROLE_TO_ASSUME: "arn:aws:iam::438270576332:role/oidc_github_action_role"
+  REPOSITORY_NAME: "${{ github.actor }}"
+  IMAGE_NAME: "oidc-demo"
 permissions:
       id-token: write   # This is required for requesting the JWT
       contents: read    # This is required for actions/checkout
@@ -21,6 +23,18 @@ jobs:
           role-session-name: ecs-deploy-action-session
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Create ECS Cluster
+      - name: Check if AWS ECR Repository exists
+      # The ecr_repo this is used to reference the name of a specific section in the Job step
+        id: ecr_repo
         run: |
-          aws ecs create-cluster --cluster-name my-test-cluster
+          if aws ecr describe-repositories --repository-names "${{ env.REPOSITORY_NAME }}_${{ env.IMAGE_NAME }}" --region ${{ env.AWS_REGION }} 2>/dev/null; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+      # The below will create the AWS ECR repository if it does not exist
+      - name: Create AWS ECR Repository
+        if: steps.ecr_repo.outputs.exists == 'false'
+        run: |
+              aws ecr create-repository --repository-name "${{ env.REPOSITORY_NAME }}_${{ env.IMAGE_NAME }}" --region ${{ env.AWS_REGION }}
+      # The below will login to AWS ECR and build image
