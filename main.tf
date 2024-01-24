@@ -8,9 +8,13 @@ data "aws_vpc" "default" {
   default = true
 }
 
-data "aws_subnet_ids" "default" {
-  vpc_id = data.aws_vpc.default.id
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
 }
+
 
 # ECS Task Definition
 resource "aws_ecs_task_definition" "owasp_juice_shop_task" {
@@ -53,7 +57,7 @@ resource "aws_ecs_service" "owasp_juice_shop_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = data.aws_subnet_ids.default.ids
+    subnets          = data.aws_subnets.default.ids
     assign_public_ip = true
   }
 
