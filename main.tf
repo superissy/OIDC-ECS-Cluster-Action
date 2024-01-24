@@ -63,6 +63,7 @@ resource "aws_iam_role_policy_attachment" "ecs_service_role_policy" {
 # ECS Service
 resource "aws_ecs_service" "owasp_juice_shop_service" {
   name            = "owasp_juice_shop_service"
+  force_new_deployment = true
   cluster         = aws_ecs_cluster.owasp-juice-shop.id
   task_definition = aws_ecs_task_definition.owasp_juice_shop_task.arn
   launch_type     = "FARGATE"
