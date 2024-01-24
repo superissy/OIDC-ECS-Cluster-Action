@@ -1,5 +1,5 @@
 output "name" {
-  value = aws_ecs_cluster.owasp-juice-shop.name 
+  value = aws_ecs_cluster.owasp-juice-shop.name
 }
 
 output "id" {
