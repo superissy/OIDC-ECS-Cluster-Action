@@ -60,5 +60,5 @@ jobs:
       - name: Create ECS cluster via terraform
         run: |
           terraform init 
-          terraform plan -out=tfplan -var="image_name=$$IMAGE_URI"
-          terraform apply -auto-approve tfplan
+          terraform plan -out=tfplan -var="image_name=$IMAGE_URI"
+          terraform apply -auto-approve tfplan -var="image_name=$IMAGE_URI"
