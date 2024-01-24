@@ -22,7 +22,7 @@ resource "aws_ecs_task_definition" "owasp_juice_shop_task" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
-  execution_role_arn       = data.aws_iam_role.ecs-service-role.arn
+  execution_role_arn       = aws_iam_role.ecs_service_role.arn
   container_definitions    = <<TASK_DEFINITION
 [
   {
@@ -43,8 +43,26 @@ TASK_DEFINITION
 }
 
 # IAM Roles
-data "aws_iam_role" "ecs-service-role" {
+resource "aws_iam_role" "ecs_service_role" {
   name = "ecsServiceRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ecs.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_service_role_policy" {
+  role       = aws_iam_role.ecs_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
 }
 
 
