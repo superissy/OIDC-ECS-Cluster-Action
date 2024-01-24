@@ -7,5 +7,5 @@ output "id" {
 }
 
 output "arn" {
-  value = aws_ecs_cluster.owasp-juice-shop.arn
+  value = aws_ecs_task_definition.owasp_juice_shop_task.arn
 }

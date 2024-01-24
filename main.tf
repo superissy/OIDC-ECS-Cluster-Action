@@ -1,6 +1,5 @@
 resource "aws_ecs_cluster" "owasp-juice-shop" {
   name = "owasp-juice-shop"
-
 }
 
 
@@ -52,8 +51,8 @@ data "aws_iam_role" "ecs-service-role" {
 # ECS Service
 resource "aws_ecs_service" "owasp_juice_shop_service" {
   name            = "owasp_juice_shop_service"
-  cluster         = aws_ecs_cluster.cluster.id
-  task_definition = aws_ecs_task_definition.task.arn
+  cluster         = aws_ecs_cluster.owasp-juice-shop.id
+  task_definition = aws_ecs_task_definition.owasp_juice_shop_task.arn
   launch_type     = "FARGATE"
 
   network_configuration {
