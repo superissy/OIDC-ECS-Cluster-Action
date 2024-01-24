@@ -60,5 +60,5 @@ jobs:
       - name: Create ECS cluster, Task Definition & Services  via terraform
         run: |
           terraform init 
-          terraform plan -out=tfplan -var="image_name=$GITHUB_OUTPUT"
+          terraform plan -out=tfplan -var="image_name=$$GITHUB_OUTPUT"
           terraform apply -auto-approve tfplan
