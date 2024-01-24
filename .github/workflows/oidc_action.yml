@@ -37,4 +37,22 @@ jobs:
         if: steps.ecr_repo.outputs.exists == 'false'
         run: |
               aws ecr create-repository --repository-name "${{ env.REPOSITORY_NAME }}_${{ env.IMAGE_NAME }}" --region ${{ env.AWS_REGION }}
+
       # The below will login to AWS ECR and build image
+      - name: Get ECR Repository URI
+        id: get-uri
+        run: |
+          OUTPUT=$(aws ecr describe-repositories --repository-names "${{ env.REPOSITORY_NAME }}_${{ env.IMAGE_NAME }}" --region ${{ env.AWS_REGION }} --query 'repositories[0].repositoryUri' --output text)
+          echo "::set-output name=ecr_registory::$OUTPUT"
+
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          IMAGE_URI=${{ steps.get-uri.outputs.ecr_registory }}:latest
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo "image=$$IMAGE_URI" >> $GITHUB_OUTPUT
