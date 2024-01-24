@@ -17,7 +17,7 @@ data "aws_subnets" "default" {
 
 # ECS Task Definition
 resource "aws_ecs_task_definition" "owasp_juice_shop_task" {
-  family                   = "test"
+  family                   = "owasp_juice_shop_task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024
