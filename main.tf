@@ -23,23 +23,17 @@ resource "aws_ecs_task_definition" "owasp_juice_shop_task" {
   cpu                      = 1024
   memory                   = 2048
   execution_role_arn       = aws_iam_role.ecs_service_role.arn
-  container_definitions    = <<TASK_DEFINITION
-[
-  {
-    "name": "iis",
-    "image": ${var.image_name},
-    "cpu": 1024,
-    "memory": 2048,
-    "essential": true
-    "portMappings": [
-      {
-        "containerPort": 80,
-        "hostPort": 80
-      }
-    ]
-  }
-]
-TASK_DEFINITION
+  container_definitions = jsonencode([{
+    name      = "owasp-container",
+    image     = var.image_name,
+    cpu       = 1024,
+    memory    = 2048,
+    essential = true,
+    portMappings = [{
+      containerPort = 80,
+      hostPort      = 80
+    }]
+  }])
 }
 
 # IAM Roles
