@@ -3,3 +3,11 @@ provider "aws" {
 
 }
 
+terraform {
+  backend "s3" {
+    bucket = "xsave-oidc-statefile"
+    key    = "tfstate"
+    region = "us-east-1"
+    
+  }
+}
